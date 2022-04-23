@@ -2,32 +2,24 @@
 import fetch from "node-fetch";
 import schedule from "node-schedule";
 
-// https://crontab.guru/
-// https://javascript.plainenglish.io/scheduling-tasks-on-heroku-ebfa63c124dd
-// var j = schedule.scheduleJob('* * * * * *', function () {
-//     console.log('The answer to life, the universe, and everything!');
-// });
 
+// Schedule: at minute 0 past hour 12 and 0.
+var j = schedule.scheduleJob('* 0 0,12 * * *', function () {
+    const response = await fetch('https://precariedapp.herokuapp.com/get', {
+        method: "GET"
+    })
+        .then(res => res.json())
+        .then(res => {
+            // console.log(res);
+            del().then(() => add(res));
+        }
+        );
+});
 
-const response = await fetch('https://precariedapp.herokuapp.com/get', {
-    method: "GET"
-})
-    .then(res => res.json())
-    .then(res => {
-        console.log(res);
-        // add(res);
-        // del(res);
-    }
-    );
-
-async function del(res) {
+async function del() {
     await fetch("https://cache-twitter.herokuapp.com/delete", {
         method: "DELETE"
-    })
-        .catch(error => {
-            console.log(error);
-            return;
-        });
+    });
 }
 
 async function add(res) {
@@ -38,8 +30,4 @@ async function add(res) {
         },
         body: res,
     })
-        .catch(error => {
-            console.log(error);
-            return;
-        });
 }
