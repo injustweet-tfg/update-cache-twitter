@@ -4,7 +4,7 @@ import schedule from "node-schedule";
 
 
 // Schedule: at minute 0 past hour 12 and 0.
-var j = schedule.scheduleJob('* 0 0,12 * * *', function () {
+var j = schedule.scheduleJob('* 0 0,12 * * *', async function () {
     await fetch('https://precariedapp.herokuapp.com/get', { method: "GET" })
         .then(handleErrors) // Handle HTTP errors
         .then(res => res.json()) // Convert to JSON
