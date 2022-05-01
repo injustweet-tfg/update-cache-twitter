@@ -3,11 +3,12 @@ import fetch from "node-fetch";
 import schedule from "node-schedule";
 
 
-// Schedule: at minute 0 past hour 12 and 0.
+// // Schedule: at minute 0 past hour 12 and 0.
 var j = schedule.scheduleJob('0 0 0,12 * * *', async function () {
     await fetch('https://precariedapp.herokuapp.com/get', { method: "GET" })
         .then(handleErrors) // Handle HTTP errors
         .then(res => res.json()) // Convert to JSON
+        .then(res => checkFormat(res))
         .then(tweets => { // Process the JSON
             del() // Delete all old tweets
                 .then(handleErrors) // Handle HTTP errors
@@ -27,6 +28,16 @@ var j = schedule.scheduleJob('0 0 0,12 * * *', async function () {
 });
 
 
+function checkFormat(res) {
+    // Check format (only extra commas)
+    res = res.replace(new RegExp(',,+', 'g'), ',');
+    try {
+        JSON.parse(res);
+    } catch (e) {
+        throw Error("Invalid JSON");
+    }
+    return res;
+}
 
 function handleErrors(response) {
     if (!response.ok) {
