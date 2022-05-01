@@ -7,18 +7,18 @@ import schedule from "node-schedule";
 var j = schedule.scheduleJob('0 0 0,12 * * *', async function () {
     await fetch('https://precariedapp.herokuapp.com/get', { method: "GET" })
         .then(handleErrors) // Handle HTTP errors
-        .then(res => res.json()) // Convert to JSON
-        .then(res => checkFormat(res))
-        .then(tweets => { // Process the JSON
+        .then(res => res.json()) // Convert to JSON response
+        .then(res => checkFormat(res)) // Check format
+        .then(tweets => { // Process the JSON string
             del() // Delete all old tweets
                 .then(handleErrors) // Handle HTTP errors
-                .then(deleteRes => deleteRes.json()) // Convert to JSON
-                .then(deleteData => {  // Process the JSON
+                .then(deleteRes => deleteRes.json()) // Convert to JSON response
+                .then(deleteData => {  // Process the JSON response
                     console.log("Tweets deleted:", deleteData.deletedCount);
                     add(tweets)
                         .then(handleErrors) // Handle HTTP errors
-                        .then(addRes => addRes.json()) // Convert to JSON 
-                        .then(addData => console.log("Tweets added:", addData.insertedCount)) // Process the JSON
+                        .then(addRes => addRes.json()) // Convert to JSON response
+                        .then(addData => console.log("Tweets added:", addData.insertedCount)) // Process the JSON response
                         .catch(err => console.log("Function add() failed.", err)); // Show errors
                 })
                 .catch(err => console.log("Function del() failed.", err)); // Show errors
