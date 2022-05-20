@@ -5,7 +5,7 @@ import schedule from "node-schedule";
 
 // // Schedule: at minute 0 past hour 12 and 0.
 var j = schedule.scheduleJob('0 0 0,12 * * *', async function () {
-    await fetch('https://precariedapp.herokuapp.com/get', { method: "GET" })
+    await fetch('https://precariedappv2.herokuapp.com/get', { method: "GET" })
         .then(handleErrors) // Handle HTTP errors
         .then(res => res.json()) // Convert to JSON response
         .then(res => checkFormat(res)) // Check format
@@ -26,7 +26,6 @@ var j = schedule.scheduleJob('0 0 0,12 * * *', async function () {
         )
         .catch(err => console.log("Function fetch() failed.", err)); // Show errors
 });
-
 
 function checkFormat(res) {
     // Check format (only extra commas)
