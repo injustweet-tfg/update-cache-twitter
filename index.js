@@ -2,8 +2,8 @@
 import fetch from "node-fetch";
 import schedule from "node-schedule";
 
-
-// // Schedule: at minute 0 past hour 12 and 0.
+// To update the data base by deleting all data and adding everything updated
+// // Schedule: every two days at 9am
 var j = schedule.scheduleJob('0 0 9 */2 * *', async function () {
     await fetch('https://precariedappv2.herokuapp.com/get', { method: "GET" })
         .then(handleErrors) // Handle HTTP errors
@@ -27,9 +27,8 @@ var j = schedule.scheduleJob('0 0 9 */2 * *', async function () {
         .catch(err => console.log("Function fetch() failed.", err)); // Show errors
 });
 
-
+// To check format (only extra commas)
 function checkFormat(res) {
-    // Check format (only extra commas)
     res = res.replace(new RegExp(',,+', 'g'), ',');
     try {
         JSON.parse(res);
@@ -39,6 +38,7 @@ function checkFormat(res) {
     return res;
 }
 
+// To handle errors
 function handleErrors(response) {
     if (!response.ok) {
         throw Error(response.statusText);
@@ -46,6 +46,7 @@ function handleErrors(response) {
     return response;
 }
 
+// To delete all data from our data base
 async function del() {
     const response = await fetch("https://cache-twitter.herokuapp.com/delete", {
         method: "DELETE"
@@ -53,6 +54,7 @@ async function del() {
     return response;
 }
 
+// To add data to our data base
 async function add(res) {
     const response = await fetch("https://cache-twitter.herokuapp.com/add", {
         method: "POST",
